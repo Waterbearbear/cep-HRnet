@@ -27,7 +27,7 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description='Train Cephalometric Net')
 
-    parser.add_argument('--cfg', help='experiment configuration filename',
+    parser.add_argument('--cfg', help='experiment configuration filename',default='experiments/aflw/cep_hrnet_w18.yaml',
                         required=True, type=str)
 
     args = parser.parse_args()

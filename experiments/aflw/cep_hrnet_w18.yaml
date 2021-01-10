@@ -6,10 +6,10 @@ PRINT_FREQ: 50
 
 DATASET:
   DATASET: CEP
-  TRAINROOT: 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\images\TrainDataCrop512'
-  TESTROOT:  'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\images\TestDataCrop512'
-  TRAINSET: 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_TrainCrop512.csv'
-  TESTSET: 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_TestCrop512.csv'
+  TRAINROOT: 'D:\project\zjx\LandmarkDetection\cep-HRnet\data\TrainDataCrop256'
+  TESTROOT:  'D:\project\zjx\LandmarkDetection\cep-HRnet\data\TestDataCrop256'
+  TRAINSET: 'D:\project\zjx\LandmarkDetection\cep-HRnet\data\Landmark_TrainCrop256.csv'
+  TESTSET: 'D:\project\zjx\LandmarkDetection\cep-HRnet\data\Landmark_TestCrop256.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 0 #30
@@ -18,14 +18,14 @@ MODEL:
   NAME: 'hrnet-cep'
   NUM_JOINTS: 19
   INIT_WEIGHTS: true
-  PRETRAINED: 'E:\BME\HRNet-Facial-Landmark-Detection-master\model512\cep_hrnet_w18_30\final_state.pth'
+  PRETRAINED: ''
   SIGMA: 1.25
   IMAGE_SIZE:
-    - 512
-    - 512
+    - 256
+    - 256
   HEATMAP_SIZE:
-    - 128
-    - 128
+    - 64
+    - 64
   EXTRA:
     FINAL_CONV_KERNEL: 1
     STAGE2:
@@ -68,10 +68,10 @@ MODEL:
         - 144
       FUSE_METHOD: SUM
 TRAIN:
-  BATCH_SIZE_PER_GPU: 2 # 16
+  BATCH_SIZE_PER_GPU: 16 # 16
   SHUFFLE: False
   BEGIN_EPOCH: 0
-  END_EPOCH: 100
+  END_EPOCH: 300
   RESUME: true
   OPTIMIZER: 'adam'
   LR: 0.0003

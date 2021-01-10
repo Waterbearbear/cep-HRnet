@@ -14,7 +14,7 @@ from yacs.config import CfgNode as CN
 
 _C = CN()
 
-_C.OUTPUT_DIR = 'E:\BME\HRNet-Facial-Landmark-Detection-master\output'
+_C.OUTPUT_DIR = 'D:\project\zjx\LandmarkDetection\cep-HRnet\output'
 _C.LOG_DIR = 'log'
 _C.GPUS = (0, )
 _C.WORKERS = 8
@@ -32,7 +32,7 @@ _C.CUDNN.ENABLED = True
 _C.MODEL = CN()
 _C.MODEL.NAME = 'hrnet'
 _C.MODEL.INIT_WEIGHTS = True
-_C.MODEL.PRETRAINED = 'E:\BME\HRNet-Facial-Landmark-Detection-master\hernetv2_pretrained\hrnetv2_w18_imagenet_pretrained.pth'
+_C.MODEL.PRETRAINED = ''
 _C.MODEL.NUM_JOINTS = 19
 _C.MODEL.TARGET_TYPE = 'Gaussian'
 _C.MODEL.IMAGE_SIZE = [512, 512]  # width * height
@@ -74,7 +74,7 @@ _C.MODEL.EXTRA.STAGE4.FUSE_METHOD = 'SUM'
 _C.DATASET = CN()
 _C.DATASET.TRAINROOT = 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\images\TrainDataCrop512'
 _C.DATASET.TESTROOT  = 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\images\TestDataCrop512'
-_C.DATASET.DATASET = 'CEP'
+_C.DATASET.DATASET = 'AFLW'
 _C.DATASET.TRAINSET = 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_TrainCrop512.csv'
 _C.DATASET.TESTSET = 'E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_TestCrop512.csv'
 

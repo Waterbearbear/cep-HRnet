@@ -135,6 +135,8 @@ class CEP(data.Dataset):
         ##归一化与ToTensor
         img = img.astype(np.float32)
         img = (img/255.0 - self.mean) / self.std
+        # img = img.squeeze(2)
+        # print(img.shape)
         img = img.transpose([2, 0, 1])
         target = torch.Tensor(target)
 

@@ -1,3 +1,6 @@
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+
 import torch
 import lib.core.function as function
 from lib.utils import transforms
@@ -5,7 +8,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import pandas as pd
 from skimage import io
-import os
+
+
 
 
 def nme_plot(preds ,meta):
@@ -49,7 +53,7 @@ def show_landmarks(data,idx, groundtruth,predtions):
     else:
         img_idx = idx
 
-    img_path = os.path.join("E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\images\%sData" % data,
+    img_path = os.path.join(".\data\%sData" % data,
                             "%03d.bmp" % img_idx)
 
 
@@ -63,7 +67,7 @@ def show_landmarks(data,idx, groundtruth,predtions):
     plt.scatter(groundtruth[idx,:,0], groundtruth[idx,:, 1], s=10, marker='.', c='r')
     plt.scatter(predtions[idx,:, 0], predtions[idx,:, 1], s=10, marker='.', c='b')
     plt.title("%s %d prediction"%(data,img_idx))
-    plt.savefig("E:\BME\HRNet-Facial-Landmark-Detection-master\output\CEP\cep_hrnet_w18\\CEP_predict%d.png"%img_idx)
+    plt.savefig(".\output\CEP\cep_hrnet_w18\\CEP_predict%d.png"%img_idx)
     plt.pause(0.01)  # pause a bit so that plots are updated
 
 
@@ -101,6 +105,8 @@ def show_landmarks(data,idx, groundtruth,predtions):
 
 
 if __name__ == "__main__":
+    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+
     # 打印出19个点的MRE
     # 显示预测的点和ground truth的对比图
     # 显示准确率 在2mm  2.5mm 3mm 4mm
@@ -109,18 +115,20 @@ if __name__ == "__main__":
     #  转换公式有问题 精度损失?
     #  试着打印256图的pred和ground truth对比
 
-    path_test = "E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_Test.csv"
-    path_test256 = "E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_TestCrop256.csv"
-    path_test512 = "E:\BME\HRNet-Facial-Landmark-Detection-master\CEP\Landmark_TestCrop512.csv"
-    path_pred = "E:\BME\HRNet-Facial-Landmark-Detection-master\output\CEP\cep_hrnet_w18\predictions.pth"
-    pred_x,pred_y = 512,512
-    # pred_x,pred_y = 256,256
+    path_test = ".\data\Landmark_Test.csv"
+    path_test256 = ".\data\Landmark_TestCrop256.csv"
+    path_test512 = ".\data\Landmark_TestCrop512.csv"
+
+    path_pred = ".\output\CEP\cep_hrnet_w18\predictions.pth"
+
+    pred_x_512,pred_y_512 = 512,512
+    pred_x_256,pred_y_256 = 256,256
     crop_x,crop_y = 1678,1678
     crop_size_x = 142
     crop_size_y = 682
 
 
-    transform = np.array([(crop_x/pred_x),( crop_y/pred_y )])
+    transform = np.array([(pred_x_256/pred_x_256),( pred_y_256/pred_x_256 )])
     # print(transform)
     # print(transform.shape)
 
@@ -130,10 +138,11 @@ if __name__ == "__main__":
 
 
     pred_ori = torch.load(path_pred).numpy()
-    pred = (pred_ori * transform) + np.array([crop_size_x,crop_size_y])
+    pred = (pred_ori * transform)
+    # pred = (pred_ori * transform) + np.array([crop_size_x,crop_size_y])
 
     #读取Ground Truth的坐标
-    landmarks_frame = pd.read_csv(path_test)
+    landmarks_frame = pd.read_csv(path_test256)
     landmarks  = landmarks_frame.iloc[:, 1:].values
     landmarks  = landmarks.astype('float').reshape(-1,19,2)
 
@@ -156,7 +165,7 @@ if __name__ == "__main__":
     plt.xlabel("scale")
     plt.ylabel("Predict Accuracy")
     # plt.title("")
-    plt.savefig("E:\BME\HRNet-Facial-Landmark-Detection-master\output\CEP\cep_hrnet_w18\\acc.png")
+    plt.savefig(".\output\CEP\cep_hrnet_w18\\acc.png")
     plt.show()
 
 
@@ -179,7 +188,7 @@ if __name__ == "__main__":
     plt.xlabel("landmarks")
     plt.ylabel("MRE(mm)")
     plt.title("MRE")
-    plt.savefig("E:\BME\HRNet-Facial-Landmark-Detection-master\output\CEP\cep_hrnet_w18\\MRE.png")
+    plt.savefig(".\output\CEP\cep_hrnet_w18\\MRE.png")
     plt.show()
 
     # plotacc(19,rmse_acc2,rmse_acc25,rmse_acc3,rmse_acc4)
