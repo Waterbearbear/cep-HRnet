@@ -20,16 +20,21 @@ def nme_plot(preds ,meta):
     target = targets.cpu().numpy()
 
     # L为landmark数量
+    # (N -- batch_size , L --- 19)
+
     N = preds.shape[0]
     L = preds.shape[1]
     rmse = np.zeros(N)
 
     for i in range(N):
-
         pts_pred, pts_gt = preds[i, ], target[i, ]
+
+
         if L == 19:  # aflw
             # interocular = meta['box_size'][i]
             pass
+
+
         elif L == 29:  # cofw
             interocular = np.linalg.norm(pts_gt[8, ] - pts_gt[9, ])
         elif L == 68:  # 300w
@@ -41,7 +46,6 @@ def nme_plot(preds ,meta):
             raise ValueError('Number of landmarks is wrong')
         # rmse[i] = np.sum(np.linalg.norm(pts_pred - pts_gt, axis=1)) / (interocular * L)
         rmse[i] = np.sum(np.linalg.norm(pts_pred - pts_gt, axis=1)) / (L)
-
     return rmse
 
 
@@ -53,7 +57,7 @@ def show_landmarks(data,idx, groundtruth,predtions):
     else:
         img_idx = idx
 
-    img_path = os.path.join(".\data\%sData" % data,
+    img_path = os.path.join(".\data\%sDataCrop256" % data,
                             "%03d.bmp" % img_idx)
 
 
@@ -64,14 +68,15 @@ def show_landmarks(data,idx, groundtruth,predtions):
 
     plt.figure()
     plt.imshow(image,cmap=plt.cm.gray)
+
+
     plt.scatter(groundtruth[idx,:,0], groundtruth[idx,:, 1], s=10, marker='.', c='r')
     plt.scatter(predtions[idx,:, 0], predtions[idx,:, 1], s=10, marker='.', c='b')
+
+
     plt.title("%s %d prediction"%(data,img_idx))
     plt.savefig(".\output\CEP\cep_hrnet_w18\\CEP_predict%d.png"%img_idx)
     plt.pause(0.01)  # pause a bit so that plots are updated
-
-
-
     plt.show()
 
 
@@ -142,21 +147,26 @@ if __name__ == "__main__":
     # pred = (pred_ori * transform) + np.array([crop_size_x,crop_size_y])
 
     #读取Ground Truth的坐标
+    # 修改path_test512  获取不同分辨率下的坐标
     landmarks_frame = pd.read_csv(path_test256)
+
+
     landmarks  = landmarks_frame.iloc[:, 1:].values
     landmarks  = landmarks.astype('float').reshape(-1,19,2)
 
     rmse = np.zeros([19,1])
 
-    rmse_acc = np.linalg.norm(pred - landmarks, axis=2) * 0.1
+    rmse_acc = np.linalg.norm(pred - landmarks, axis=2)
     # rmse_acc2 =  np.sum((rmse_acc  <= 2))/pred.shape[0]  /19
     # rmse_acc25 = np.sum((rmse_acc <= 2.5))/pred.shape[0] /19
     # rmse_acc3  = np.sum((rmse_acc <= 3))/pred.shape[0]   /19
     # rmse_acc4  = np.sum((rmse_acc <= 4))/pred.shape[0]   /19
 
+
+    # 不同scale下的准确率
     rmse_acc_list = []
     for i in [2,2.5,3,4]:
-        rmse_ac = np.sum((rmse_acc) <= i)/pred.shape[0] / 19
+        rmse_ac = np.sum((rmse_acc) <= i)/pred.shape[0] /10
         rmse_acc_list.append(rmse_ac)
 
     names_acc = ["%0.1f mm"%i for i in [2,2.5,3,4]]
@@ -176,7 +186,7 @@ if __name__ == "__main__":
 
 
     #转换为毫米误差
-    rmse *= 0.1
+    # rmse *= 0.1
     names = ["%d"%(i+1) for i in range(rmse.shape[0])]
     # print(names)
     rmse = np.reshape(rmse,[19])
@@ -192,18 +202,13 @@ if __name__ == "__main__":
     plt.show()
 
     # plotacc(19,rmse_acc2,rmse_acc25,rmse_acc3,rmse_acc4)
-
-
-
-
-
-
-    # 原图中 模型输出与Ground Truth的对比
     # landmarks_frame = pd.read_csv(path_test256)
     # landmarks_frame = pd.read_csv(path_test512)
     # landmarks = landmarks_frame.iloc[:, 1:].values
     # landmarks = landmarks.astype('float').reshape(-1, 19, 2)
     # show_landmarks("Test",4,landmarks,pred_ori)
+
+    # 原图中 模型输出与Ground Truth的对比
     show_landmarks("Test",0,landmarks,pred)
 
     # landmarks_gt = landmarks_frame.iloc[i - 1 - 300, 1:].values

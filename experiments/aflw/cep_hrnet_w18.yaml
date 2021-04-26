@@ -1,8 +1,12 @@
 GPUS: (0, )
-WORKERS: 8
+WORKERS: 1
+# 线程数量
+
 PRINT_FREQ: 50
 
-
+#1.dataset  file path
+#2.train parameters
+#3.workers , batchsize
 
 DATASET:
   DATASET: CEP
@@ -10,6 +14,7 @@ DATASET:
   TESTROOT:  'D:\project\zjx\LandmarkDetection\cep-HRnet\data\TestDataCrop256'
   TRAINSET: 'D:\project\zjx\LandmarkDetection\cep-HRnet\data\Landmark_TrainCrop256.csv'
   TESTSET: 'D:\project\zjx\LandmarkDetection\cep-HRnet\data\Landmark_TestCrop256.csv'
+#  你要调的参数
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 0 #30
@@ -19,6 +24,7 @@ MODEL:
   NUM_JOINTS: 19
   INIT_WEIGHTS: true
   PRETRAINED: ''
+  # 高斯概率核的大小 0.25 - 3.0 进行设置
   SIGMA: 1.25
   IMAGE_SIZE:
     - 256
@@ -68,16 +74,17 @@ MODEL:
         - 144
       FUSE_METHOD: SUM
 TRAIN:
-  BATCH_SIZE_PER_GPU: 16 # 16
-  SHUFFLE: False
+  #你要调的参数
+  BATCH_SIZE_PER_GPU: 16 # 16 batch_size
+  SHUFFLE: False  #对数据集进行洗牌
   BEGIN_EPOCH: 0
-  END_EPOCH: 300
+  END_EPOCH: 300  #训练的轮数
   RESUME: true
-  OPTIMIZER: 'adam'
-  LR: 0.0003
-  WD: 0.0
+  OPTIMIZER: 'adam' #选择的优化器
+  LR: 0.0003  # 学习率
+  WD: 0.0     # 我也不知道是什么
   LR_STEP: [30, 50]
-  MOMENTUM: 0.0
-  NESTEROV: false
+  MOMENTUM: 0.0  # 动量
+  NESTEROV: false # 插值方式
 TEST:
   BATCH_SIZE_PER_GPU: 8
